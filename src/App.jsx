@@ -23,6 +23,19 @@ function App() {
 
   }
 
+  function deleteItem(itemId) {
+    console.log('itemId', itemId);
+    // const position = itemList.findIndex(element => element.id !== itemId);
+    // console.log(position);
+    // const updatedItemList = itemList.splice(position,1);
+    // setItemList(updatedItemList);
+    // console.log(updatedItemList);
+
+    const updatedItemList = itemList.filter(item => item.id !== itemId);
+    setItemList(updatedItemList);
+    console.log(updatedItemList);
+  }
+
   return (
     <div className="container mt-5">
       <h1 className="text-center">CRUD SIMPLE</h1>
@@ -38,8 +51,16 @@ function App() {
             {
               itemList.map( item =>  <li className="list-group-item" key={item.id}>
                                       <span className="lead">{ item.task }</span>
-                                      <button className="btn btn-danger btn-sm float-right mx-2">Eliminar</button>
-                                      <button className="btn btn-warning btn-sm float-right">Editar</button>
+                                      <button 
+                                        className="btn btn-danger btn-sm float-right mx-2"
+                                        onClick= {() => deleteItem(item.id)}
+                                      >
+                                          Eliminar
+                                      </button>
+                                      <button 
+                                        className="btn btn-warning btn-sm float-right">
+                                          Editar
+                                      </button>
                                     </li>
                           )
             }
