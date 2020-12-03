@@ -6,24 +6,25 @@ function App() {
   const [itemList, setItemList] = useState([]); // estado para la lista de tareas
   const [editionMode, setEditionMode] = useState(false); // estado para ver si tengo que poner el form en modo edicion o no
   const [taskId, setTaskId] = useState('');
+  const [error, setError] = useState(null)
   
   function addTask(e) {
     e.preventDefault() //para que en nuestro formulario no se procese el get
     if(!task.trim()){
-      console.log('no has escrito nada');
+      setError('no has escrito nada');
       return
     } 
     console.log(task);
     drawItemList(task);
     setTask(''); 
-
+    setError(null);
   }
 
   // Método que se llama cuando presionamos el boton "editar" del formulario
   function updateTask(e) {
     e.preventDefault() //para que en nuestro formulario no se procese el get
     if(!task.trim()){ 
-      console.log('no has escrito nada');
+      setError('no has escrito nada');
       return
     } 
 
@@ -32,6 +33,7 @@ function App() {
     setEditionMode(false);
     setTask('');
     setTaskId('');
+    setError(null);
   }
 
   function drawItemList(task) {
@@ -67,31 +69,36 @@ function App() {
       <div className="row">
         <div className="col-8">
           <h4 className="text-center">Lista de tareas</h4>
-          <ul className="list-group">
-            {/* <li className="list-group-item">
-              <span className="lead">Nombre de la tarea</span>
-              <button className="btn btn-danger btn-sm float-right mx-2">Eliminar</button>
-              <button className="btn btn-warning btn-sm float-right">Editar</button>
-            </li> */}
-            {
-              itemList.map( item =>  <li className="list-group-item" key={item.id}>
-                                      <span className="lead">{ item.task }</span>
-                                      <button 
-                                        className="btn btn-danger btn-sm float-right mx-2"
-                                        onClick= {() => deleteItem(item.id)}
-                                      >
-                                          Eliminar
-                                      </button>
-                                      <button 
-                                        className="btn btn-warning btn-sm float-right"
-                                        onClick= {() => updateItem(item)}
-                                      >
-                                          Editar
-                                      </button>
-                                    </li>
-                          )
-            }
-          </ul>
+          {
+            itemList.length === 0 ? (
+              <p>No hay ninguna tareas</p>
+
+            ) : (
+              <ul className="list-group">
+                {
+                  itemList.map( item =>  
+                                  <li className="list-group-item" key={item.id}>
+                                    <span className="lead">{ item.task }</span>
+                                    <button 
+                                      className="btn btn-danger btn-sm float-right mx-2"
+                                      onClick= {() => deleteItem(item.id)}
+                                    >
+                                        Eliminar
+                                    </button>
+                                    <button 
+                                      className="btn btn-warning btn-sm float-right"
+                                      onClick= {() => updateItem(item)}
+                                    >
+                                        Editar
+                                   </button>
+                                  </li>
+                            )
+                }
+              </ul>
+  
+            )
+
+          }
         </div>
         <div className="col-4">
           <h4 className="text-center">
@@ -100,6 +107,9 @@ function App() {
             }
           </h4>
           <form onSubmit={ editionMode ? (e) => updateTask(e) : (e) => addTask(e) }>
+            {
+              error ? <span className="text-danger">{error}</span> : null
+            }
             <input 
               type="text" 
               className="form-control mb-2"
