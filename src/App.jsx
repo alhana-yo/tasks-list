@@ -2,8 +2,9 @@ import { useState } from "react";
 
 function App() {
 
-  const [task, setTask] = useState('');
-  const [itemList, setItemList] = useState([]);
+  const [task, setTask] = useState(''); // estado para la tarea que se escribe en el input
+  const [itemList, setItemList] = useState([]); // estado para la lista de tareas
+  const [editionMode, setEditionMode] = useState(false); // estado para ver si tengo que poner el form en modo edicion o no
   
   
   function addTask(e) {
@@ -36,6 +37,14 @@ function App() {
     console.log(updatedItemList);
   }
 
+
+  function updateItem(item) {
+
+    setEditionMode(true);
+    setTask(item.task);
+
+  }
+
   return (
     <div className="container mt-5">
       <h1 className="text-center">CRUD SIMPLE</h1>
@@ -58,7 +67,9 @@ function App() {
                                           Eliminar
                                       </button>
                                       <button 
-                                        className="btn btn-warning btn-sm float-right">
+                                        className="btn btn-warning btn-sm float-right"
+                                        onClick= {() => updateItem(item)}
+                                      >
                                           Editar
                                       </button>
                                     </li>
@@ -67,7 +78,11 @@ function App() {
           </ul>
         </div>
         <div className="col-4">
-          <h4 className="text-center">Formulario</h4>
+          <h4 className="text-center">
+            {
+              editionMode ? 'Editar tarea' : 'Añadir tarea'
+            }
+          </h4>
           <form onSubmit={ e=>addTask(e) }>
             <input 
               type="text" 
@@ -76,7 +91,13 @@ function App() {
               onChange= { e => setTask(e.target.value)} // estoy añadiendo al estado lo que hay en el input
               value= {task}
             />
-            <button className="btn btn-dark btn-block" type="submit"> Añadir</button>
+            {
+              editionMode ? (
+                <button className="btn btn-warning btn-block" type="submit"> Editar</button>
+              ): (
+                <button className="btn btn-dark btn-block" type="submit"> Añadir</button>
+              )
+            }
           </form>
         </div>
       </div>
