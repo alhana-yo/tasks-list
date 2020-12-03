@@ -5,7 +5,7 @@ function App() {
   const [task, setTask] = useState(''); // estado para la tarea que se escribe en el input
   const [itemList, setItemList] = useState([]); // estado para la lista de tareas
   const [editionMode, setEditionMode] = useState(false); // estado para ver si tengo que poner el form en modo edicion o no
-  
+  const [taskId, setTaskId] = useState('');
   
   function addTask(e) {
     e.preventDefault() //para que en nuestro formulario no se procese el get
@@ -17,6 +17,21 @@ function App() {
     drawItemList(task);
     setTask(''); 
 
+  }
+
+  // Método que se llama cuando presionamos el boton "editar" del formulario
+  function updateTask(e) {
+    e.preventDefault() //para que en nuestro formulario no se procese el get
+    if(!task.trim()){ 
+      console.log('no has escrito nada');
+      return
+    } 
+
+    const updatedItemList = itemList.map(item => item.id === taskId ? { id: taskId, task} : item);
+    setItemList(updatedItemList);
+    setEditionMode(false);
+    setTask('');
+    setTaskId('');
   }
 
   function drawItemList(task) {
@@ -39,11 +54,12 @@ function App() {
 
 
   function updateItem(item) {
-
     setEditionMode(true);
     setTask(item.task);
-
+    setTaskId(item.id);
   }
+
+
 
   return (
     <div className="container mt-5">
@@ -83,7 +99,7 @@ function App() {
               editionMode ? 'Editar tarea' : 'Añadir tarea'
             }
           </h4>
-          <form onSubmit={ e=>addTask(e) }>
+          <form onSubmit={ editionMode ? (e) => updateTask(e) : (e) => addTask(e) }>
             <input 
               type="text" 
               className="form-control mb-2"
